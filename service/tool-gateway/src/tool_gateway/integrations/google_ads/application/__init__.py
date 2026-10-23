@@ -1,0 +1,1 @@
+"""Coordinate Google Ads operations."""

@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Validate GitHub Actions workflows
+        run: |
+          docker run --rm -v "${PWD}:/repo" -w /repo \
+            rhysd/actionlint@sha256:887a259a5a534f3c4f36cb02dca341673c6089431057242cdc931e9f133147e9
+
+      - name: Check deployment shell scripts
+        run: |
+          docker run --rm -v "${PWD}:/mnt" \
+            koalaman/shellcheck@sha256:2097951f02e735b613f4a34de20c40f937a6c8f18ecb170612c88c34517221fb \
+            .github/workflows/deploy_scripts/services/deploy_prod_via_ssh.sh \
+            .github/workflows/deploy_scripts/infra/bootstrap_host_via_ssh.sh \
+            .github/workflows/deploy_scripts/services/remote_deploy_prod.sh \
+            .github/workflows/deploy_scripts/infra/remote_bootstrap_host.sh \
+            .github/workflows/deploy_scripts/services/validate_deployment_config.sh \
+            scripts/verify_hermes_runtime.sh
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.13'
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@d0d8abe699bfb85fec6de9f7adb5ae17292296ff # v6
+        with:
+          enable-cache: true
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: service/frontend/package-lock.json
+
+      - name: Install frontend dependencies
+        run: npm ci --prefix service/frontend
+
+      - name: Run documentation, lint, and type checks
+        run: ./scripts/workspace.sh lint
+
+      - name: Run unit tests
+        run: ./scripts/workspace.sh test
+
+      - name: Verify native Hermes runtime image
+        run: bash scripts/verify_hermes_runtime.sh
+
+      - name: Audit locked dependencies
+        run: |
+          npm audit --prefix service/frontend --audit-level=high
+          for service in backend tool-gateway code-sync; do
+            (cd "service/${service}" && uv run --with pip-audit==2.10.1 pip-audit)
+          done
+
+      - name: Install Chromium
+        run: npx --prefix service/frontend playwright install --with-deps chromium
+
+      - name: Run browser tests
+        run: npm --prefix service/frontend run test:e2e -- --reporter=dot

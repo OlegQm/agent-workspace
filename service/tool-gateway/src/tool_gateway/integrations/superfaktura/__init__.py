@@ -1,0 +1,1 @@
+"""Provide the SuperFaktura integration."""

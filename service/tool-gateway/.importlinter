@@ -1,0 +1,109 @@
+[importlinter]
+root_package = tool_gateway
+
+[importlinter:contract:integrations_do_not_depend_on_composition]
+name = Integrations do not depend on bootstrap or entrypoints
+type = forbidden
+source_modules =
+    tool_gateway.integrations
+forbidden_modules =
+    tool_gateway.bootstrap
+    tool_gateway.entrypoints
+
+[importlinter:contract:shared_infrastructure_is_independent]
+name = Shared infrastructure does not depend on integrations or composition
+type = forbidden
+source_modules =
+    tool_gateway.infrastructure
+forbidden_modules =
+    tool_gateway.bootstrap
+    tool_gateway.entrypoints
+    tool_gateway.integrations
+
+[importlinter:contract:domains_are_inner]
+name = Integration domains do not depend on outer integration layers
+type = forbidden
+source_modules =
+    tool_gateway.integrations.google_ads.domain
+    tool_gateway.integrations.metabase.domain
+forbidden_modules =
+    tool_gateway.integrations.bigquery.api
+    tool_gateway.integrations.bigquery.application
+    tool_gateway.integrations.bigquery.infrastructure
+    tool_gateway.integrations.clickup.api
+    tool_gateway.integrations.clickup.application
+    tool_gateway.integrations.clickup.infrastructure
+    tool_gateway.integrations.code.api
+    tool_gateway.integrations.code.application
+    tool_gateway.integrations.code.infrastructure
+    tool_gateway.integrations.google_ads.api
+    tool_gateway.integrations.google_ads.application
+    tool_gateway.integrations.google_ads.infrastructure
+    tool_gateway.integrations.google_analytics.api
+    tool_gateway.integrations.google_analytics.application
+    tool_gateway.integrations.google_analytics.infrastructure
+    tool_gateway.integrations.meta_ads.api
+    tool_gateway.integrations.meta_ads.application
+    tool_gateway.integrations.meta_ads.infrastructure
+    tool_gateway.integrations.metabase.api
+    tool_gateway.integrations.metabase.application
+    tool_gateway.integrations.metabase.infrastructure
+    tool_gateway.integrations.payments.gopay.api
+    tool_gateway.integrations.payments.gopay.application
+    tool_gateway.integrations.payments.gopay.infrastructure
+    tool_gateway.integrations.payments.stripe.api
+    tool_gateway.integrations.payments.stripe.application
+    tool_gateway.integrations.payments.stripe.infrastructure
+    tool_gateway.integrations.superfaktura.api
+    tool_gateway.integrations.superfaktura.application
+    tool_gateway.integrations.superfaktura.infrastructure
+
+[importlinter:contract:applications_do_not_depend_on_delivery_or_implementation]
+name = Integration application layers do not depend on API or concrete infrastructure
+type = forbidden
+source_modules =
+    tool_gateway.integrations.bigquery.application
+    tool_gateway.integrations.clickup.application
+    tool_gateway.integrations.code.application
+    tool_gateway.integrations.google_ads.application
+    tool_gateway.integrations.google_analytics.application
+    tool_gateway.integrations.meta_ads.application
+    tool_gateway.integrations.metabase.application
+    tool_gateway.integrations.payments.gopay.application
+    tool_gateway.integrations.payments.stripe.application
+    tool_gateway.integrations.superfaktura.application
+forbidden_modules =
+    tool_gateway.integrations.bigquery.api
+    tool_gateway.integrations.bigquery.infrastructure
+    tool_gateway.integrations.clickup.api
+    tool_gateway.integrations.clickup.infrastructure
+    tool_gateway.integrations.code.api
+    tool_gateway.integrations.code.infrastructure
+    tool_gateway.integrations.google_ads.api
+    tool_gateway.integrations.google_ads.infrastructure
+    tool_gateway.integrations.google_analytics.api
+    tool_gateway.integrations.google_analytics.infrastructure
+    tool_gateway.integrations.meta_ads.api
+    tool_gateway.integrations.meta_ads.infrastructure
+    tool_gateway.integrations.metabase.api
+    tool_gateway.integrations.metabase.infrastructure
+    tool_gateway.integrations.payments.gopay.api
+    tool_gateway.integrations.payments.gopay.infrastructure
+    tool_gateway.integrations.payments.stripe.api
+    tool_gateway.integrations.payments.stripe.infrastructure
+    tool_gateway.integrations.superfaktura.api
+    tool_gateway.integrations.superfaktura.infrastructure
+
+[importlinter:contract:integrations_are_independent]
+name = Integration containers do not import one another
+type = independence
+modules =
+    tool_gateway.integrations.bigquery
+    tool_gateway.integrations.clickup
+    tool_gateway.integrations.code
+    tool_gateway.integrations.google_ads
+    tool_gateway.integrations.google_analytics
+    tool_gateway.integrations.meta_ads
+    tool_gateway.integrations.metabase
+    tool_gateway.integrations.payments
+    tool_gateway.integrations.superfaktura

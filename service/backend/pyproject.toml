@@ -1,0 +1,81 @@
+[project]
+name = "open-agent-workspace-ai-backend"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+  "aiofiles>=24.1",
+  "asyncpg>=0.30",
+  "fastapi>=0.116",
+  "httpx>=0.28",
+  "pydantic-settings>=2.10",
+  "pymupdf>=1.26",
+  "openpyxl>=3.1",
+  "pillow>=11.3",
+  "python-docx>=1.2",
+  "pyyaml>=6.0",
+  "sqlalchemy[asyncio]>=2.0.41",
+  "uvicorn[standard]>=0.35",
+  "pwdlib[argon2]>=0.2",
+  "python-multipart>=0.0.20"
+]
+
+[project.optional-dependencies]
+dev = [
+  "asgi-lifespan>=2.1",
+  "httpx-sse>=0.4",
+  "import-linter>=2.3",
+  "mypy>=1.17",
+  "pytest>=8.4",
+  "pytest-asyncio>=1.1",
+  "pytest-cov>=6.2",
+  "pytest-xdist>=3.8",
+  "respx>=0.22",
+  "ruff>=0.12",
+  "testcontainers[postgres]>=4.12"
+]
+
+[project.scripts]
+open-agent-workspace-ai-backend = "bootstrap.app:main"
+open-agent-workspace-ai-admin = "entrypoints.cli.admin:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = [
+  "src/bootstrap",
+  "src/entrypoints",
+  "src/features",
+  "src/infrastructure",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+extend-select = ["TID252"]
+ignore = ["B008", "BLE001"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+addopts = "--strict-markers --import-mode=importlib"
+pythonpath = ["tests"]
+markers = [
+  "unit: isolated behavior with no external process",
+  "integration: behavior against a disposable PostgreSQL container",
+  "contract: stable HTTP, SSE, CLI, database-schema, or security contract",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["bootstrap", "entrypoints", "features", "infrastructure"]
+
+[tool.coverage.report]
+fail_under = 100
+show_missing = true
+skip_covered = false

@@ -1,0 +1,55 @@
+version: '3'
+
+tasks:
+  host:check:
+    cmds: ['./scripts/workspace.sh host-check']
+  host:bootstrap:
+    cmds: ['./scripts/workspace.sh host-bootstrap']
+  setup:
+    cmds: ['./scripts/workspace.sh setup']
+  runtime:prepare:
+    cmds: ['./scripts/workspace.sh runtime-prepare']
+  runtime:verify:
+    cmds: ['bash scripts/verify_hermes_runtime.sh']
+  up:
+    cmds: ['./scripts/workspace.sh up']
+  down:
+    cmds: ['docker compose --env-file .env -f infra/orchestration/docker-compose/docker-compose.yml down']
+  test:
+    cmds: ['./scripts/workspace.sh test']
+  lint:
+    cmds: ['./scripts/workspace.sh lint']
+  docs:check:
+    cmds: ['./scripts/workspace.sh docs-check']
+  agent:create:
+    requires: {vars: [AGENT]}
+    cmds: ['./scripts/workspace.sh agent-create {{.AGENT}}']
+  agent:start:
+    requires: {vars: [AGENT]}
+    cmds: ['./scripts/workspace.sh agent-start {{.AGENT}}']
+  agent:stop:
+    requires: {vars: [AGENT]}
+    cmds: ['./scripts/workspace.sh agent-stop {{.AGENT}}']
+  agent:status:
+    cmds: ['./scripts/workspace.sh agent-status {{.AGENT}}']
+  agent:auth:
+    requires: {vars: [AGENT]}
+    cmds: ['./scripts/workspace.sh agent-auth {{.AGENT}}']
+  user:create:
+    requires: {vars: [AGENT]}
+    cmds: ['./scripts/workspace.sh user-create {{.AGENT}}']
+  admin:create:
+    requires: {vars: [USERNAME]}
+    cmds: ['./scripts/workspace.sh admin-create {{.USERNAME}}']
+  agent:export:
+    requires: {vars: [AGENT]}
+    cmds: ['./scripts/workspace.sh agent-export {{.AGENT}}']
+  agent:import:
+    requires: {vars: [AGENT, ARCHIVE]}
+    cmds: ['./scripts/workspace.sh agent-import {{.AGENT}} {{.ARCHIVE}}']
+  code:sync:
+    cmds: ['./scripts/workspace.sh code-sync']
+  code:status:
+    cmds: ['./scripts/workspace.sh code-status']
+  deploy:validate:
+    cmds: ['./scripts/workspace.sh deploy-validate']

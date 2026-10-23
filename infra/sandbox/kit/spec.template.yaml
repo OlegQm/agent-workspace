@@ -1,0 +1,20 @@
+schemaVersion: "2"
+kind: mixin
+name: open-agent-workspace-__AGENT_ID__
+version: "0.1.0"
+displayName: "Open Agent Workspace __DISPLAY_NAME__ runtime"
+description: "Tool Gateway credential injection and network policy."
+permissions:
+  network:
+    allow:
+      - "**"
+      - "__AGENT_ID__-tools.127.0.0.1.sslip.io:__TOOL_GATEWAY_PORT__"
+credentials:
+  - service: open-agent-workspace-gateway-__AGENT_ID__
+    apiKey:
+      name: TOOL_GATEWAY_TOKEN
+      proxyManaged: true
+      inject:
+        - domain: __AGENT_ID__-tools.127.0.0.1.sslip.io:__TOOL_GATEWAY_PORT__
+          header: Authorization
+          format: "Bearer %s"

@@ -1,0 +1,1 @@
+"""Register GoPay MCP tools."""

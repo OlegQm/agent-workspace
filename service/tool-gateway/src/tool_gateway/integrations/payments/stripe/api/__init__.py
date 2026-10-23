@@ -1,0 +1,1 @@
+"""Register Stripe MCP tools."""

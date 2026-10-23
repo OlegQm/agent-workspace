@@ -1,0 +1,64 @@
+id: assistant
+display_name: Assistant
+username: assistant
+sandbox_name: open-agent-workspace-assistant
+hermes_url: http://127.0.0.1:18642
+hermes_api_key_env: HERMES_API_KEY_ASSISTANT
+host_port: 18642
+tool_gateway_port: 18765
+tool_gateway_token_env: TOOL_GATEWAY_TOKEN_ASSISTANT
+workspace_subdir: workspace
+locale: en
+llm:
+  provider: openai-codex
+  api_mode: codex_responses
+  openai_runtime: auto
+  auth_method: oauth
+  default_mode: medium
+  models:
+    small: {id: replace-with-small-model-id, label: Small, description: Small general-purpose model}
+    medium: {id: replace-with-balanced-model-id, label: Balanced, description: Balanced general-purpose model}
+    high: {id: replace-with-high-capability-model-id, label: High, description: High-capability general-purpose model}
+  compression:
+    enabled: true
+    codex_responses_native: true
+    codex_responses_compact_threshold: 200000
+    in_place: true
+tools:
+  - metabase
+  - bigquery
+  - superfaktura
+  - google_ads
+  - meta_ads
+  - google_analytics
+  - gopay
+  - stripe
+  - clickup
+  - code
+resources:
+  environment: prod
+  metabase_scope: null
+  metabase_collection_ids: []
+  metabase_database_ids: []
+  metabase_sql_tables: []
+  metabase_sql_denied_columns: [email, phone, address, password, token, secret]
+  metabase_setting_keys: []
+  bigquery_datasets: []
+  google_ads_customer_ids: []
+  meta_ad_account_ids: []
+  google_analytics_property_ids: []
+  superfaktura_companies: []
+  superfaktura_company_labels: {}
+  gopay_accounts: []
+  stripe_accounts: []
+  clickup_workspaces: []
+  clickup_spaces: []
+  clickup_lists: []
+  code_repositories: []
+  tool_export_limits:
+    metabase: {max_rows: 10000, max_bytes: 10485760}
+    bigquery: {max_rows: 10000, max_bytes: 10485760}
+    superfaktura: {max_rows: 10000, max_bytes: 10485760}
+    google_ads: {max_rows: 10000, max_bytes: 10485760}
+    google_analytics: {max_rows: 10000, max_bytes: 10485760}
+    clickup: {max_rows: 10000, max_bytes: 10485760}

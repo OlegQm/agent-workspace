@@ -1,0 +1,38 @@
+{
+  "name": "open-agent-workspace-ai-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vue-tsc -b && vite build",
+    "typecheck": "vue-tsc -b",
+    "test": "vitest run",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@vueuse/core": "^13.6.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "dompurify": "^3.4.13",
+    "lucide-vue-next": "^0.468.0",
+    "markdown-it": "^15.0.0",
+    "radix-vue": "^1.9.17",
+    "tailwind-merge": "^2.6.0",
+    "vue": "^3.5.18"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@types/markdown-it": "^14.1.2",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/tsconfig": "^0.7.0",
+    "autoprefixer": "^10.4.21",
+    "jsdom": "^30.0.1",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17",
+    "typescript": "~5.8.3",
+    "vite": "^7.1.2",
+    "vitest": "^5.0.5",
+    "vue-tsc": "^3.0.5"
+  }
+}

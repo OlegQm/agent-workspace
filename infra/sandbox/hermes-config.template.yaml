@@ -1,0 +1,31 @@
+agent:
+  disabled_toolsets:
+    - memory
+    - session_search
+    - skills
+    - delegation
+    - cronjob
+    - bfl
+    - context_engine
+    - kanban
+platform_toolsets:
+  api_server:
+    - terminal
+    - file
+    - todo
+    - vision
+    - web
+    - browser
+    - open-agent-workspace
+terminal:
+  backend: "local"
+  cwd: "__WORKSPACE__"
+  timeout: 1800
+  home_mode: "profile"
+mcp_servers:
+  open-agent-workspace:
+    url: "http://__AGENT_ID__-tools.127.0.0.1.sslip.io:__TOOL_GATEWAY_PORT__/mcp"
+    headers:
+      Authorization: "Bearer ${TOOL_GATEWAY_TOKEN}"
+    timeout: 300
+    connect_timeout: 30

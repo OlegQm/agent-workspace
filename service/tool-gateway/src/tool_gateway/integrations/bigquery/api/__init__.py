@@ -1,0 +1,1 @@
+"""Register BigQuery MCP tools."""

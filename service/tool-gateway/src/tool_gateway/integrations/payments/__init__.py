@@ -1,0 +1,1 @@
+"""Group payment-provider integrations."""

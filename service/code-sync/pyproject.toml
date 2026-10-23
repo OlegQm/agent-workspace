@@ -1,0 +1,28 @@
+[project]
+name = "open-agent-workspace-code-sync"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = ["pyyaml>=6.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.4", "ruff>=0.12"]
+
+[project.scripts]
+open-agent-workspace-code-sync = "code_sync.main:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/code_sync"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+extend-select = ["TID252"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"

@@ -1,0 +1,57 @@
+name: Bootstrap Production Host
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: open-agent-workspace-ai-production
+  cancel-in-progress: false
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+    env:
+      DEPLOY_SSH_KEY_PATH: ${{ github.workspace }}/.deploy/deploy_key
+      DEPLOY_SSH_KNOWN_HOSTS_PATH: ${{ github.workspace }}/.deploy/known_hosts
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Prepare strict SSH trust
+        env:
+          DEPLOY_SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY }}
+          DEPLOY_SSH_PRIVATE_KEY_B64: ${{ secrets.DEPLOY_SSH_PRIVATE_KEY_B64 }}
+          DEPLOY_SSH_KNOWN_HOSTS: ${{ secrets.DEPLOY_SSH_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          install -m 700 -d ~/.ssh "$(dirname "${DEPLOY_SSH_KEY_PATH}")"
+          if [ -n "${DEPLOY_SSH_PRIVATE_KEY_B64}" ]; then
+            printf '%s' "${DEPLOY_SSH_PRIVATE_KEY_B64}" | base64 -d > "${DEPLOY_SSH_KEY_PATH}"
+          elif [ -n "${DEPLOY_SSH_PRIVATE_KEY}" ]; then
+            printf '%s\n' "${DEPLOY_SSH_PRIVATE_KEY}" | sed 's/\r$//' > "${DEPLOY_SSH_KEY_PATH}"
+          else
+            echo "DEPLOY_SSH_PRIVATE_KEY or DEPLOY_SSH_PRIVATE_KEY_B64 is required" >&2
+            exit 1
+          fi
+          if [ -z "${DEPLOY_SSH_KNOWN_HOSTS}" ]; then
+            echo "DEPLOY_SSH_KNOWN_HOSTS is required" >&2
+            exit 1
+          fi
+          printf '%s\n' "${DEPLOY_SSH_KNOWN_HOSTS}" > "${DEPLOY_SSH_KNOWN_HOSTS_PATH}"
+          chmod 600 "${DEPLOY_SSH_KEY_PATH}" "${DEPLOY_SSH_KNOWN_HOSTS_PATH}"
+          ssh-keygen -y -f "${DEPLOY_SSH_KEY_PATH}" >/dev/null
+
+      - name: Bootstrap Ubuntu, Docker, KVM and SBX
+        env:
+          DEPLOY_SSH_HOST: ${{ secrets.DEPLOY_SSH_HOST }}
+          DEPLOY_SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
+          DEPLOY_SSH_PORT: ${{ secrets.DEPLOY_SSH_PORT || '22' }}
+        run: bash .github/workflows/deploy_scripts/infra/bootstrap_host_via_ssh.sh
+
+      - name: Next step
+        run: |
+          echo "Open a new SSH session so docker/kvm group membership applies, then run Deploy Production."

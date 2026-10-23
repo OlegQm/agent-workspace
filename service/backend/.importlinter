@@ -1,0 +1,109 @@
+[importlinter]
+root_packages =
+    bootstrap
+    entrypoints
+    features
+    infrastructure
+
+[importlinter:contract:features_do_not_depend_on_bootstrap]
+name = Features do not depend on application bootstrap
+type = forbidden
+source_modules =
+    features
+forbidden_modules =
+    bootstrap
+
+[importlinter:contract:infrastructure_does_not_depend_on_features]
+name = Shared infrastructure does not depend on feature slices
+type = forbidden
+source_modules =
+    infrastructure
+forbidden_modules =
+    bootstrap
+    entrypoints
+    features
+
+[importlinter:contract:agents_configuration_does_not_depend_on_api]
+name = Agent configuration does not depend on its API
+type = forbidden
+source_modules =
+    features.agents.infrastructure
+forbidden_modules =
+    features.agents.api
+
+[importlinter:contract:identity_application_does_not_depend_on_api]
+name = Identity application does not depend on its API
+type = forbidden
+source_modules =
+    features.identity.application
+forbidden_modules =
+    features.identity.api
+
+[importlinter:contract:chat_domain_is_layer_independent]
+name = Chat domain does not depend on outer layers
+type = forbidden
+source_modules =
+    features.chat.domain
+forbidden_modules =
+    features.chat.api
+    features.chat.infrastructure
+
+[importlinter:contract:chat_infrastructure_does_not_depend_on_api]
+name = Chat infrastructure does not depend on its API
+type = forbidden
+source_modules =
+    features.chat.infrastructure
+forbidden_modules =
+    features.chat.api
+
+[importlinter:contract:workspace_domain_is_layer_independent]
+name = Workspace domain does not depend on outer layers
+type = forbidden
+source_modules =
+    features.workspace.domain
+forbidden_modules =
+    features.workspace.api
+    features.workspace.application
+    features.workspace.infrastructure
+
+[importlinter:contract:workspace_application_does_not_depend_on_api]
+name = Workspace application does not depend on API
+type = forbidden
+source_modules =
+    features.workspace.application
+forbidden_modules =
+    features.workspace.api
+
+[importlinter:contract:workspace_infrastructure_does_not_depend_on_api]
+name = Workspace infrastructure does not depend on API
+type = forbidden
+source_modules =
+    features.workspace.infrastructure
+forbidden_modules =
+    features.workspace.api
+
+[importlinter:contract:metabase_planning_domain_is_layer_independent]
+name = Metabase planning domain does not depend on outer layers
+type = forbidden
+source_modules =
+    features.metabase_planning.domain
+forbidden_modules =
+    features.metabase_planning.api
+    features.metabase_planning.application
+    features.metabase_planning.infrastructure
+
+[importlinter:contract:metabase_planning_application_does_not_depend_on_api]
+name = Metabase planning application does not depend on API
+type = forbidden
+source_modules =
+    features.metabase_planning.application
+forbidden_modules =
+    features.metabase_planning.api
+
+[importlinter:contract:metabase_planning_infrastructure_does_not_depend_on_api]
+name = Metabase planning infrastructure does not depend on API
+type = forbidden
+source_modules =
+    features.metabase_planning.infrastructure
+forbidden_modules =
+    features.metabase_planning.api

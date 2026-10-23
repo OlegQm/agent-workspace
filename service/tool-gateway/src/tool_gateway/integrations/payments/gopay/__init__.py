@@ -1,0 +1,1 @@
+"""Provide the GoPay integration."""

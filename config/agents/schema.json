@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["id", "display_name", "username", "sandbox_name", "hermes_url", "hermes_api_key_env", "host_port", "tool_gateway_port", "tool_gateway_token_env", "workspace_subdir", "llm", "tools", "resources"],
+  "properties": {
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{1,31}$"},
+    "display_name": {"type": "string", "minLength": 1},
+    "username": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{1,63}$"},
+    "sandbox_name": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{1,63}$"},
+    "hermes_url": {"type": "string", "format": "uri"},
+    "hermes_api_key_env": {"type": "string"},
+    "host_port": {"type": "integer", "minimum": 1024, "maximum": 65535},
+    "tool_gateway_port": {"type": "integer", "minimum": 1024, "maximum": 65535},
+    "tool_gateway_token_env": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]+$"},
+    "workspace_subdir": {"type": "string", "pattern": "^[A-Za-z0-9_-]+$"},
+    "locale": {"enum": ["en", "sk"]},
+    "llm": {
+      "type": "object",
+      "required": ["provider", "api_mode", "auth_method", "default_mode", "models"],
+      "properties": {
+        "provider": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*$"},
+        "api_mode": {"enum": ["codex_responses", "chat_completions", "responses", "anthropic_messages"]},
+        "auth_method": {"enum": ["oauth", "api_key"]},
+        "credential_env": {"type": ["string", "null"], "pattern": "^[A-Z][A-Z0-9_]*$"},
+        "openai_runtime": {"type": ["string", "null"]},
+        "default_mode": {"enum": ["small", "medium", "high"]},
+        "models": {
+          "type": "object",
+          "required": ["small", "medium", "high"],
+          "properties": {
+            "small": {"$ref": "#/$defs/model"},
+            "medium": {"$ref": "#/$defs/model"},
+            "high": {"$ref": "#/$defs/model"}
+          },
+          "additionalProperties": false
+        },
+        "compression": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean"},
+            "codex_responses_native": {"type": "boolean"},
+            "codex_responses_compact_threshold": {"type": "integer", "minimum": 1},
+            "in_place": {"type": "boolean"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "tools": {"type": "array", "items": {"enum": ["metabase", "superfaktura", "bigquery", "google_ads", "meta_ads", "google_analytics", "gopay", "stripe", "clickup", "code"]}, "uniqueItems": true},
+    "resources": {
+      "type": "object",
+      "required": ["environment"],
+      "properties": {
+        "environment": {"const": "prod"},
+        "metabase_scope": {"type": ["string", "null"]},
+        "metabase_collection_ids": {"type": "array", "items": {"type": "integer"}, "uniqueItems": true},
+        "metabase_database_ids": {"type": "array", "items": {"type": "integer"}, "uniqueItems": true},
+        "metabase_sql_tables": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "metabase_sql_denied_columns": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "metabase_setting_keys": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "bigquery_datasets": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "google_ads_customer_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "meta_ad_account_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "google_analytics_property_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "superfaktura_companies": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "superfaktura_company_labels": {"type": "object", "additionalProperties": {"type": "string", "minLength": 1}},
+        "stripe_accounts": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "gopay_accounts": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "clickup_workspaces": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "clickup_spaces": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "clickup_lists": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "code_repositories": {"type": "array", "items": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$"}, "uniqueItems": true},
+        "tool_export_limits": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "max_rows": {"type": "integer", "minimum": 1},
+              "max_bytes": {"type": "integer", "minimum": 1}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "model": {
+      "type": "object",
+      "required": ["id", "label"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "label": {"type": "string", "minLength": 1},
+        "description": {"type": ["string", "null"], "minLength": 1}
+      },
+      "additionalProperties": false
+    }
+  }
+}

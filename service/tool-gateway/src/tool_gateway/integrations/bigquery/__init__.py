@@ -1,0 +1,1 @@
+"""Provide the BigQuery integration."""

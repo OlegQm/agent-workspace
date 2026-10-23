@@ -1,0 +1,12 @@
+services:
+  backend:
+    image: ${BACKEND_IMAGE:?BACKEND_IMAGE is required}
+
+  tool-gateway-assistant:
+    image: ${TOOL_GATEWAY_IMAGE:?TOOL_GATEWAY_IMAGE is required}
+
+  code-sync:
+    image: ${CODE_SYNC_IMAGE:?CODE_SYNC_IMAGE is required}
+
+  frontend:
+    image: ${FRONTEND_IMAGE:?FRONTEND_IMAGE is required}
